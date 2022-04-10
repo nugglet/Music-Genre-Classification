@@ -24,4 +24,4 @@ Example (for extracting MFCC from the dataset):
 
 ### Quirks
 
-- [`jazz.00054.wav`](./Data/genres_original/jazz/jazz.00054.wav) will not be loaded by `librosa` as it is over 1 MB.
+- [`jazz.00054.wav`](./Data/genres_original/jazz/jazz.00054.wav) will not be loaded. Possibly is corrupt
