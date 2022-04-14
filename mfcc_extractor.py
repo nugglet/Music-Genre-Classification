@@ -15,6 +15,7 @@ Example:
         $ python mfcc_extractor.py --help
 """
 
+from re import S
 import pandas as pd
 import librosa
 from tqdm import tqdm
@@ -23,9 +24,10 @@ import argparse
 import pickle
 import os
 import sys
+from datetime import datetime
 
 
-def time_series(data_all, sr_all):
+def time_series(data_all, sr_all, NUM_SLICES, SAMPLES_PER_SLICE, N_MFCC):
     """Default time series MFCC extractor.
 
     Args:
@@ -33,19 +35,27 @@ def time_series(data_all, sr_all):
         sr_all (list): Sample rate of all the audio files.
 
     Returns:
-        _type_: List of MFCC data.
+        tuple: List of MFCC data and labels.
     """
 
     mfcc_list = []
+    labels_list = []
 
     for i in tqdm(range(len(data_all))):
-        mfcc = librosa.feature.mfcc(y=data_all[i], sr=sr_all[i])
-        mfcc_list.append(mfcc)
+        for s in range(NUM_SLICES):
+            start_sample = SAMPLES_PER_SLICE * s
+            end_sample = start_sample + SAMPLES_PER_SLICE
+            song = data_all[i]
+            mfcc = librosa.feature.mfcc(
+                y=song[start_sample:end_sample], sr=sr_all[i], n_mfcc=N_MFCC
+            )
+            mfcc = mfcc.T
+            mfcc_list.append(mfcc.tolist())
+            labels_list.append(i)
+    return mfcc_list, labels_list
 
-    return mfcc_list
 
-
-def htk(data_all, sr_all):
+def htk(data_all, sr_all, NUM_SLICES, SAMPLES_PER_SLICE, N_MFCC):
     """Default time series MFCC extractor with htk enabled.
 
     Args:
@@ -53,136 +63,70 @@ def htk(data_all, sr_all):
         sr_all (list): Sample rate of all the audio files.
 
     Returns:
-        _type_: List of MFCC data.
+        tuple: List of MFCC data and labels.
     """
 
     mfcc_list = []
+    labels_list = []
 
     for i in tqdm(range(len(data_all))):
-        mfcc = librosa.feature.mfcc(y=data_all[i], sr=sr_all[i], htk=True)
-        mfcc_list.append(mfcc)
-
-    return mfcc_list
-
-
-def log_power(data_all, sr_all):
-    """Log-power MFCC extractor.
-
-    Args:
-        data_all (list): Data from loading audio files.
-        sr_all (list): Sample rate of all the audio files.
-
-    Returns:
-        _type_: List of MFCC data.
-    """
-
-    mfcc_list = []
-
-    for i in tqdm(range(len(data_all))):
-        S = librosa.feature.melspectrogram(y=data_all[i], sr=sr_all[i])
-        mfcc = librosa.feature.mfcc(S=librosa.power_to_db(S))
-        mfcc_list.append(mfcc)
-
-    return mfcc_list
+        for s in range(NUM_SLICES):
+            start_sample = SAMPLES_PER_SLICE * s
+            end_sample = start_sample + SAMPLES_PER_SLICE
+            song = data_all[i]
+            mfcc = librosa.feature.mfcc(
+                y=song[start_sample:end_sample], sr=sr_all[i], n_mfcc=N_MFCC, htk=True
+            )
+            mfcc = mfcc.T
+            mfcc_list.append(mfcc.tolist())
+            labels_list.append(i)
+    return mfcc_list, labels_list
 
 
-def time_series_hop(data_all, sr_all, hop_length):
-    """Default time series MFCC extractor with custom hop length.
-
-    Args:
-        data_all (list): Data from loading audio files.
-        sr_all (list): Sample rate of all the audio files.
-
-    Returns:
-        _type_: List of MFCC data.
-    """
-
-    mfcc_list = []
-
-    for i in tqdm(range(len(data_all))):
-        mfcc = librosa.feature.mfcc(y=data_all[i], sr=sr_all[i], hop_length=hop_length)
-        mfcc_list.append(mfcc)
-
-    return mfcc_list
-
-
-def htk_hop(data_all, sr_all, hop_length):
-    """Default time series MFCC extractor with htk enabled and custom hop-length.
-
-    Args:
-        data_all (list): Data from loading audio files.
-        sr_all (list): Sample rate of all the audio files.
-
-    Returns:
-        _type_: List of MFCC data.
-    """
-
-    mfcc_list = []
-
-    for i in tqdm(range(len(data_all))):
-        mfcc = librosa.feature.mfcc(
-            y=data_all[i], sr=sr_all[i], htk=True, hop_length=hop_length
-        )
-        mfcc_list.append(mfcc)
-
-    return mfcc_list
-
-
-def log_power_hop(data_all, sr_all, hop_length):
-    """Log-power MFCC extractor with custom hop-length.
-
-    Args:
-        data_all (list): Data from loading audio files.
-        sr_all (list): Sample rate of all the audio files.
-
-    Returns:
-        _type_: List of MFCC data.
-    """
-
-    mfcc_list = []
-
-    for i in tqdm(range(len(data_all))):
-        S = librosa.feature.melspectrogram(
-            y=data_all[i], sr=sr_all[i], hop_length=hop_length
-        )
-        mfcc = librosa.feature.mfcc(S=librosa.power_to_db(S))
-        mfcc_list.append(mfcc)
-
-    return mfcc_list
-
-
-if __name__ == "__main__":
-
+def main():
     # Parser for CLI configs
     parser = argparse.ArgumentParser(description="MFCC extraction.")
     parser.add_argument(
         "--mfcc_type",
         default="time-series",
         type=str,
-        help="The method used to extract MFCC. Default: time-series. Options: htk, log-power",
+        help="The method used to extract MFCC. Default: time-series. Options: htk",
     )
     parser.add_argument(
-        "--hop_length",
-        default=-1,
+        "--total_samples",
+        default=29,
         type=int,
-        help="Specify integer hop length. Default: Auto.",
+        help="Specify total samples. Default: 29.",
+    )
+    parser.add_argument(
+        "--num_slices",
+        default=10,
+        type=int,
+        help="Specify number of slices. Default: 10.",
+    )
+    parser.add_argument(
+        "--n_mfcc",
+        default=20,
+        type=int,
+        help="Specify number of MFCCs to extract. Default: 20.",
     )
 
     opt = parser.parse_args()
 
     MFCC_TYPE = opt.mfcc_type
-    HOP_LENGTH = opt.hop_length
 
-    hop_modified = True
-
-    if HOP_LENGTH == -1:
-        hop_modified = False
+    sr = 22050
+    TOTAL_SAMPLES = opt.total_samples * sr
+    NUM_SLICES = opt.num_slices
+    SAMPLES_PER_SLICE = int(TOTAL_SAMPLES / NUM_SLICES)
+    N_MFCC = opt.n_mfcc
+    START_DATETIME = datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
 
     # Logger configs
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s [%(levelname)s] %(message)s",
-        handlers=[logging.FileHandler("debug.log"), logging.StreamHandler(sys.stdout)],
+        handlers=[logging.FileHandler(f"Logs/{START_DATETIME}_mfcc_list_{MFCC_TYPE}_{TOTAL_SAMPLES}_{NUM_SLICES}_{N_MFCC}.log"), logging.StreamHandler(sys.stdout)],
     )
 
     # Start
@@ -211,31 +155,29 @@ if __name__ == "__main__":
     # MFCC extraction
     # ! Are there more options?
     logging.info(f"Converting into MFCC using {MFCC_TYPE}...")
-    if hop_modified:
-        if MFCC_TYPE == "time-series":
-            mfcc_list = time_series_hop(data_all, sr_all, HOP_LENGTH)
-        elif MFCC_TYPE == "htk":
-            mfcc_list = htk_hop(data_all, sr_all, HOP_LENGTH)
-        elif MFCC_TYPE == "log-power":
-            mfcc_list = log_power_hop(data_all, sr_all, HOP_LENGTH)
-        else:
-            logging.error("MFCC type not specified correctly.")
-    else:
-        if MFCC_TYPE == "time-series":
-            mfcc_list = time_series(data_all, sr_all)
-        elif MFCC_TYPE == "htk":
-            mfcc_list = htk(data_all, sr_all)
-        elif MFCC_TYPE == "log-power":
-            mfcc_list = log_power(data_all, sr_all)
-        else:
-            logging.error("MFCC type not specified correctly.")
 
+    if MFCC_TYPE == "time-series":
+        mfcc_list, labels_list = time_series(
+            data_all, sr_all, NUM_SLICES, SAMPLES_PER_SLICE, N_MFCC
+        )
+    elif MFCC_TYPE == "htk":
+        mfcc_list, labels_list = time_series(
+            data_all, sr_all, NUM_SLICES, SAMPLES_PER_SLICE, N_MFCC
+        )
+    else:
+        logging.error("MFCC type not specified correctly.")
+
+    new_df = pd.DataFrame({"mfcc": mfcc_list, "labels": labels_list})
     # Pickling
     logging.info(f"Dumping into pickle file...")
-    if os.path.isfile("mfcc_list"):
-        os.remove("mfcc_list")
+    if os.path.isfile(f"Preprocessed/mfcc_list_{MFCC_TYPE}_{TOTAL_SAMPLES}_{NUM_SLICES}_{N_MFCC}"):
+        os.remove(f"Preprocessed/mfcc_list_{MFCC_TYPE}_{TOTAL_SAMPLES}_{NUM_SLICES}_{N_MFCC}")
 
-    outfile = open("mfcc_list", "wb")
-    pickle.dump(mfcc_list, outfile)
+    outfile = open(f"Preprocessed/mfcc_list_{MFCC_TYPE}_{TOTAL_SAMPLES}_{NUM_SLICES}_{N_MFCC}", "wb")
+    pickle.dump(new_df, outfile)
     outfile.close()
     logging.info("Done.")
+
+
+if __name__ == "__main__":
+    main()
