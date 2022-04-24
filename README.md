@@ -11,9 +11,8 @@ The outputs will be the classification labels for each predetermined chunk of th
 
 ```
 Predictions for test.mp3:
-classical    0.726316
-jazz         0.263158
-country      0.010526
+classical    0.989474
+jazz         0.010526
 ```
 
 Of course, this means that it is 72.6% percent sure that it is of the classical genre.
@@ -55,25 +54,25 @@ optimiser_cfg:
 
 We initially trained the model using a 20% test split. These are the results. The actual model is trained on the full dataset.
 
-From `Models/2022-04-24_20-06-16_CNN_2D_Split_True.pt`:
+From `Models/2022-04-24_21-38-09_CNN_2D_Split_True.pt`:
 
 ```
-precision    recall  f1-score   support
+              precision    recall  f1-score   support
 
-       blues       0.82      0.79      0.81       208
-   classical       0.90      0.98      0.93       202
-     country       0.78      0.62      0.69       192
-       disco       0.67      0.76      0.71       201
-      hiphop       0.88      0.79      0.83       209
-        jazz       0.83      0.83      0.83       186
-       metal       0.89      0.91      0.90       211
-         pop       0.82      0.81      0.82       204
-      reggae       0.76      0.81      0.78       212
-        rock       0.66      0.66      0.66       175
+       blues       0.89      0.73      0.80       208
+   classical       0.88      0.97      0.92       202
+     country       0.64      0.75      0.69       192
+       disco       0.90      0.61      0.72       201
+      hiphop       0.83      0.78      0.80       209
+        jazz       0.95      0.76      0.85       186
+       metal       0.81      0.93      0.87       211
+         pop       0.72      0.88      0.79       204
+      reggae       0.88      0.73      0.80       212
+        rock       0.52      0.70      0.60       175
 
-    accuracy                           0.80      2000
-   macro avg       0.80      0.80      0.80      2000
-weighted avg       0.80      0.80      0.80      2000
+    accuracy                           0.79      2000
+   macro avg       0.80      0.78      0.78      2000
+weighted avg       0.81      0.79      0.79      2000
 ```
-![Training figure](Figures/2022-04-24_20-06-16_training_with_validation.png)
-![Confusion matrix](Figures/2022-04-24_20-06-16_confusion_matrix.png)
+![Training figure](Figures/2022-04-24_21-38-09_training_with_validation.png)
+![Confusion matrix](Figures/2022-04-24_21-38-09_confusion_matrix.png)
