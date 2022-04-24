@@ -57,7 +57,7 @@ We initially trained the model using a 20% test split. These are the results. Th
 From `Models/2022-04-24_21-38-09_CNN_2D_Split_True.pt`:
 
 ```
-              precision    recall  f1-score   support
+              	precision    recall  f1-score   support
 
        blues       0.89      0.73      0.80       208
    classical       0.88      0.97      0.92       202
