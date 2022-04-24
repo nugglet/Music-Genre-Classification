@@ -1,0 +1,4 @@
+n_epochs: 15
+batch_size: 32
+optimiser_cfg:
+  lr: 0.001
