@@ -37,7 +37,7 @@ This means that the model is 98.9% percent sure that it is of the classical genr
 	$ python [script-name] -h # for help
 
 - [`mfcc_extractor.py`](./mfcc_extractor.py) will extract MFCC features from the dataset.
-- [`process.py`](./process.py) will process and split the data into train and test sets if needed.
+- [`process.py`](./process.py) will process and split the data from the output of [`mfcc_extractor.py`](./mfcc_extractor.py) into train and test sets if needed.
 - [`cnn_2d_parallels.py`](./cnn_2d_parallels.py) will train the model based on the outputs of [`process.py`](./process.py).
 - [`predict_audio.py`](./predict_audio.py) will run the model chosen to output a prediction for a music file.
 
