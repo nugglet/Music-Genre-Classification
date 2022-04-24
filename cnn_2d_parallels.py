@@ -61,10 +61,10 @@ class CNN(nn.Module):
 
         self.cnn_layer2 = nn.Sequential(
             # Layer 1
-            nn.Conv2d(1, 32, kernel_size=5, stride=1, padding=2),
+            nn.Conv2d(1, 32, kernel_size=7, stride=1, padding=3),
             nn.BatchNorm2d(32),
             nn.ReLU(inplace=True),
-            nn.MaxPool2d(kernel_size=5, stride=1, padding=2),
+            nn.MaxPool2d(kernel_size=7, stride=1, padding=3),
             nn.Dropout(drp),
             # Layer 2
             nn.Conv2d(32, 32, kernel_size=5, stride=1, padding=2),

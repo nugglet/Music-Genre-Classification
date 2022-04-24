@@ -1,0 +1,33 @@
+2022-04-24 21:38:31,567 [INFO] Epoch 1/15 	 loss=57.1631 	 acc=31.72% 	 val_loss=44.3106 	 val_acc=46.52% 	 time=13.26s
+2022-04-24 21:38:44,471 [INFO] Epoch 2/15 	 loss=43.0258 	 acc=50.90% 	 val_loss=40.1010 	 val_acc=54.13% 	 time=12.90s
+2022-04-24 21:38:57,412 [INFO] Epoch 3/15 	 loss=38.0293 	 acc=57.68% 	 val_loss=34.1672 	 val_acc=61.62% 	 time=12.94s
+2022-04-24 21:39:10,365 [INFO] Epoch 4/15 	 loss=34.0352 	 acc=62.30% 	 val_loss=30.5324 	 val_acc=66.59% 	 time=12.95s
+2022-04-24 21:39:23,331 [INFO] Epoch 5/15 	 loss=30.6997 	 acc=67.42% 	 val_loss=29.3995 	 val_acc=68.41% 	 time=12.97s
+2022-04-24 21:39:36,324 [INFO] Epoch 6/15 	 loss=27.7924 	 acc=70.12% 	 val_loss=25.3666 	 val_acc=73.84% 	 time=12.99s
+2022-04-24 21:39:49,332 [INFO] Epoch 7/15 	 loss=25.2115 	 acc=73.78% 	 val_loss=27.0016 	 val_acc=71.87% 	 time=13.01s
+2022-04-24 21:40:02,349 [INFO] Epoch 8/15 	 loss=22.9359 	 acc=76.10% 	 val_loss=22.2313 	 val_acc=76.59% 	 time=13.02s
+2022-04-24 21:40:15,375 [INFO] Epoch 9/15 	 loss=21.5068 	 acc=77.78% 	 val_loss=24.5489 	 val_acc=75.84% 	 time=13.03s
+2022-04-24 21:40:28,411 [INFO] Epoch 10/15 	 loss=20.4698 	 acc=78.44% 	 val_loss=25.2699 	 val_acc=76.17% 	 time=13.04s
+2022-04-24 21:40:41,456 [INFO] Epoch 11/15 	 loss=17.7876 	 acc=81.55% 	 val_loss=24.4220 	 val_acc=77.49% 	 time=13.04s
+2022-04-24 21:40:54,512 [INFO] Epoch 12/15 	 loss=16.6469 	 acc=82.88% 	 val_loss=20.8855 	 val_acc=79.05% 	 time=13.06s
+2022-04-24 21:41:07,581 [INFO] Epoch 13/15 	 loss=15.6864 	 acc=83.53% 	 val_loss=23.2668 	 val_acc=76.38% 	 time=13.07s
+2022-04-24 21:41:20,651 [INFO] Epoch 14/15 	 loss=15.1919 	 acc=84.44% 	 val_loss=22.3331 	 val_acc=78.33% 	 time=13.07s
+2022-04-24 21:41:33,725 [INFO] Epoch 15/15 	 loss=14.2183 	 acc=85.23% 	 val_loss=22.2700 	 val_acc=78.57% 	 time=13.07s
+2022-04-24 21:41:34,067 [INFO] 
+              precision    recall  f1-score   support
+
+       blues       0.89      0.73      0.80       208
+   classical       0.88      0.97      0.92       202
+     country       0.64      0.75      0.69       192
+       disco       0.90      0.61      0.72       201
+      hiphop       0.83      0.78      0.80       209
+        jazz       0.95      0.76      0.85       186
+       metal       0.81      0.93      0.87       211
+         pop       0.72      0.88      0.79       204
+      reggae       0.88      0.73      0.80       212
+        rock       0.52      0.70      0.60       175
+
+    accuracy                           0.79      2000
+   macro avg       0.80      0.78      0.78      2000
+weighted avg       0.81      0.79      0.79      2000
+
