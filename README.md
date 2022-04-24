@@ -1,27 +1,77 @@
 # Music-Genre-Classification
 50.039 Theory and Application of Deep Learning: Project
 
+## Usage
+
+Git clone this project. To predict the music genre of your audio file, just use
+
+	$ python predict_audio.py --music_path [music-path] # defaults to use our final model
+
+The outputs will be the classification labels for each predetermined chunk of the music file that is aggregated into its normalised value counts. For example,
+
+```
+Predictions for test.mp3:
+classical    0.726316
+jazz         0.263158
+country      0.010526
+```
+
+Of course, this means that it is 72.6% percent sure that it is of the classical genre.
+
 ## Setup
 
-### Virtual environments
+### Packages required
 
-Due to a conflict over NumPy versions used by `librosa`'s dependency
-`Numba` and the latest versions of `PyTorch`, it is recommended that 
-the usage of `librosa`-dependent scripts be done on a separate virtual 
-environment.
+- Python 3.9 and above
+- torch
+- sklearn
+- pandas
+- numpy
+- librosa
+- tqdm
+- seaborn
+- scikit-plot
+- matplotlib
 
-Example (for extracting MFCC from the dataset):
+### Process the data
 
-	$ conda create -n dlproject_librosa python=3.9.12
-  	$ conda activate dlproject_librosa
-	$ conda install pip # in case of a blank environment
-	$ pip install jupyter librosa tqdm
-	$ python mfcc_extractor.py # --help for help
-
-### Preprocessing the data
+	$ python [script-name] -h # for help
 
 - [`mfcc_extractor.py`](./mfcc_extractor.py) will extract MFCC features from the dataset.
+- [`process.py`](./process.py) will process and split the data into train and test sets if needed.
+- [`cnn_2d_parallels.py`](./cnn_2d_parallels.py) will train the model based on the outputs of [`process.py`](./process.py).
+- [`predict_audio.py`](./predict_audio.py) will run the model chosen to output a prediction for a music file.
 
-### Quirks
+## Model
 
-- [`jazz.00054.wav`](./Data/genres_original/jazz/jazz.00054.wav) will not be loaded. Possibly is corrupt
+The config used to create the final model is as follows in `cnn_2d_parallels.yaml`:
+
+```
+n_epochs: 15
+batch_size: 32
+optimiser_cfg:
+  lr: 0.001
+```
+
+We initially trained the model using a 20% test split. These are the results. The actual model is trained on the full dataset.
+
+From `Models/2022-04-24_20-06-16_CNN_2D_Split_True.pt`:
+
+```
+precision    recall  f1-score   support
+
+       blues       0.82      0.79      0.81       208
+   classical       0.90      0.98      0.93       202
+     country       0.78      0.62      0.69       192
+       disco       0.67      0.76      0.71       201
+      hiphop       0.88      0.79      0.83       209
+        jazz       0.83      0.83      0.83       186
+       metal       0.89      0.91      0.90       211
+         pop       0.82      0.81      0.82       204
+      reggae       0.76      0.81      0.78       212
+        rock       0.66      0.66      0.66       175
+
+    accuracy                           0.80      2000
+   macro avg       0.80      0.80      0.80      2000
+weighted avg       0.80      0.80      0.80      2000
+```
