@@ -3,7 +3,20 @@
 
 ## Usage
 
+Git clone this project. To predict the music genre of your audio file, just use
+
 	$ python predict_audio.py --music_path [music-path] # defaults to use our final model
+
+The outputs will be the classification labels for each predetermined chunk of the music file that is aggregated into its normalised value counts. For example,
+
+```
+Predictions for test.mp3:
+classical    0.726316
+jazz         0.263158
+country      0.010526
+```
+
+Of course, this means that it is 72.6% percent sure that it is of the classical genre.
 
 ## Setup
 
