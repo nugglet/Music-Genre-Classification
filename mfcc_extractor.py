@@ -84,8 +84,27 @@ def htk(data_all, sr_all, NUM_SLICES, SAMPLES_PER_SLICE, N_MFCC):
 
 
 def main():
+    
+    if not os.path.isdir("Preprocessed"):
+        os.mkdir("Preprocessed")
+        
+    if not os.path.isdir("Logs/Preprocessed"):
+        os.mkdir("Logs/Preprocessed")
+
     # Parser for CLI configs
     parser = argparse.ArgumentParser(description="MFCC extraction.")
+    parser.add_argument(
+        "--features_path",
+        default="Data/features_30_sec.csv",
+        type=str,
+        help="Path for the features CSV. Default: 'Data/features_30_sec.csv'",
+    )
+    parser.add_argument(
+        "--folder",
+        default="Data/",
+        type=str,
+        help="Folder containing `genres_original` folder with music inside. Default: 'Data/'",
+    )
     parser.add_argument(
         "--mfcc_type",
         default="time-series",
@@ -106,12 +125,15 @@ def main():
     )
     parser.add_argument(
         "--n_mfcc",
-        default=20,
+        default=60,
         type=int,
-        help="Specify number of MFCCs to extract. Default: 20.",
+        help="Specify number of MFCCs to extract. Default: 60.",
     )
 
     opt = parser.parse_args()
+    
+    FEATURES_PATH = opt.features_path
+    FOLDER = opt.folder
 
     MFCC_TYPE = opt.mfcc_type
 
@@ -120,18 +142,18 @@ def main():
     NUM_SLICES = opt.num_slices
     SAMPLES_PER_SLICE = int(TOTAL_SAMPLES / NUM_SLICES)
     N_MFCC = opt.n_mfcc
-    START_DATETIME = datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
+    START_DATETIME = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 
     # Logger configs
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s [%(levelname)s] %(message)s",
-        handlers=[logging.FileHandler(f"Logs/{START_DATETIME}_mfcc_list_{MFCC_TYPE}_{TOTAL_SAMPLES}_{NUM_SLICES}_{N_MFCC}.log"), logging.StreamHandler(sys.stdout)],
+        handlers=[logging.FileHandler(f"Logs/Preprocessed/{START_DATETIME}_mfcc_list_{MFCC_TYPE}_{TOTAL_SAMPLES}_{NUM_SLICES}_{N_MFCC}.log"), logging.StreamHandler(sys.stdout)],
     )
 
     # Start
     logging.info("Starting MFCC extraction...")
-    df = pd.read_csv("Data/features_30_sec.csv")
+    df = pd.read_csv(FEATURES_PATH)
     logging.info("Processing csv file...")
     df["path"] = "genres_original/" + df["label"] + "/" + df["filename"]
 
@@ -145,7 +167,7 @@ def main():
     logging.info("Loading music data...")
     for i in tqdm(paths):
         try:
-            data, sr = librosa.load("Data/" + i)
+            data, sr = librosa.load(FOLDER + i)
             data_all.append(data)
             sr_all.append(sr)
         except:
