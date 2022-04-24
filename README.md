@@ -41,3 +41,37 @@ Of course, this means that it is 72.6% percent sure that it is of the classical 
 - [`process.py`](./process.py) will process and split the data into train and test sets if needed.
 - [`cnn_2d_parallels.py`](./cnn_2d_parallels.py) will train the model based on the outputs of [`process.py`](./process.py).
 - [`predict_audio.py`](./predict_audio.py) will run the model chosen to output a prediction for a music file.
+
+## Model
+
+The config used to create the final model is as follows in `cnn_2d_parallels.yaml`:
+
+```
+n_epochs: 15
+batch_size: 32
+optimiser_cfg:
+  lr: 0.001
+```
+
+We initially trained the model using a 20% test split. These are the results. The actual model is trained on the full dataset.
+
+From `Models/2022-04-24_20-06-16_CNN_2D_Split_True.pt`:
+
+```
+precision    recall  f1-score   support
+
+       blues       0.82      0.79      0.81       208
+   classical       0.90      0.98      0.93       202
+     country       0.78      0.62      0.69       192
+       disco       0.67      0.76      0.71       201
+      hiphop       0.88      0.79      0.83       209
+        jazz       0.83      0.83      0.83       186
+       metal       0.89      0.91      0.90       211
+         pop       0.82      0.81      0.82       204
+      reggae       0.76      0.81      0.78       212
+        rock       0.66      0.66      0.66       175
+
+    accuracy                           0.80      2000
+   macro avg       0.80      0.80      0.80      2000
+weighted avg       0.80      0.80      0.80      2000
+```
