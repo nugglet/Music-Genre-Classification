@@ -15,7 +15,7 @@ classical    0.989474
 jazz         0.010526
 ```
 
-Of course, this means that it is 72.6% percent sure that it is of the classical genre.
+Of course, this means that it is 98.9% percent sure that it is of the classical genre.
 
 ## Setup
 
