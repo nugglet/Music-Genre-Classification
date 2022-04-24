@@ -75,3 +75,5 @@ precision    recall  f1-score   support
    macro avg       0.80      0.80      0.80      2000
 weighted avg       0.80      0.80      0.80      2000
 ```
+![Training figure](Figures/2022-04-24_20-06-16_training_with_validation.png)
+![Confusion matrix](Figures/2022-04-24_20-06-16_confusion_matrix.png)
