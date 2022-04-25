@@ -14,6 +14,9 @@ import os
 import sys
 from datetime import datetime
 
+import warnings
+warnings.filterwarnings('ignore')
+
 class CNN(nn.Module):
     def __init__(self):
         super(CNN, self).__init__()
@@ -154,8 +157,8 @@ def main():
     logging.info("Predicting...")
     for i in tqdm(mfcc_list, total=len(mfcc_list)):
         tensorised = torch.tensor(i)
-        output = model(torch.tensor(tensorised.unsqueeze(0)).to(device)).detach()
-        pred_label = torch.argmax(F.softmax(output))
+        output = model(tensorised.unsqueeze(0).to(device)).detach()
+        pred_label = torch.argmax(F.softmax(output, dim=1))
         pred_labels.append(pred_label.item())
 
     genres_list = [
