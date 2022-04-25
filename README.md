@@ -31,6 +31,7 @@ This means that the model is 98.9% percent sure that it is of the classical genr
 - seaborn
 - scikit-plot
 - matplotlib
+- ffmpeg (for mp3 input - you might need to install it as a standalone app from their [website](https://www.ffmpeg.org/download.html) or your preferred package manager if pip installing still yields audio backend error)
 
 Alternatively, you can install from the requirements file from our virtual environment:
 
