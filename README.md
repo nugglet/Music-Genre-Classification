@@ -32,6 +32,10 @@ This means that the model is 98.9% percent sure that it is of the classical genr
 - scikit-plot
 - matplotlib
 
+Alternatively, you can install from the requirements file from our virtual environment:
+
+ 	$ pip install -r requirements.txt
+
 ### Process the data
 
 	$ python [script-name] -h # for help
